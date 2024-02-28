@@ -86,5 +86,45 @@ bit_or:
     j print_result
 
 print_result:
+    li a0, '\n'
+    printch
+    mv a1, t5
+    jal ra, count_bytes
+    mv s5, a0
+    jal ra, print_loop
+
+print_loop:
+    srl a1, t5, s5
+    call num_to_ascii
+    printch
+    sll a1, a1, s5
+    sub t5, t5, a1
+    beqz s5, end_prog
+    addi s5, s5, -4
+    j print_loop
+
+end_prog:
     exit 0
+
+
+count_bytes:
+	li a0, 0
+	beqz a1, quit
+count_bytes_loop:
+	srli a1, a1, 4
+	beqz a1, quit
+	addi a0, a0, 4
+	j count_bytes_loop
+
+num_to_ascii:
+	li t0, 10
+	bge a1, t0, symb_to_ascii
+	addi a0, a1, 48
+	ret
+symb_to_ascii:
+	addi a0, a1, 55
+	ret
+
+quit:
+    ret
 
