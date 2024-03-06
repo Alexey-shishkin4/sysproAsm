@@ -65,7 +65,7 @@ end_input:
 input_loop2:
     readch
     
-    beq a0, t4, end_prog
+    beq a0, t4, end_input1
     
     slli s4, s4, 16
     add s4, s4, t5
@@ -91,7 +91,11 @@ assemble_result_loop1:
     bne sp, s1, assemble_result_loop1  # Если стек не пуст, продолжаем сборку результата
     j input_loop2
     
-end_prog:
+end_input1:
     slli s4, s4, 16
     add s4, s4, t5
+    
+    mv a1, s3
+    mv a2, s4
+add:
     exit 0
