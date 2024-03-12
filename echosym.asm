@@ -19,13 +19,13 @@
 
 
 main:
+    li t0, 10
 read_loop:
     readch
     printch
     beq a0, t0, exit_prog
     addi a0, a0, 1
     printch
-    li t0, 10
     j read_loop
 exit_prog:
     exit 0
