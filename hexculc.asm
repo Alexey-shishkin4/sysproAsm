@@ -18,80 +18,57 @@
 .end_macro
 
 main:
-    li t3, 0  # первое число
-    li t4, 0  # второе число
-    li t5, 10
+    li s1, 0  # первое число
+    li s2, 0  # второе число
+    li s3, 0  # знак
     
-input_loop1:
-    readch
+    jal ra, read_num
+    mv s1, a0
     
-    beq a0, t5, end_input1
-    mv t0, a0
-    addi t0, t0, -48
-    li t2, 9
-    ble t0, t2, hex_digit1
-    addi t0, t0, -7
-
-hex_digit1:
-    slli t3, t3, 4
-    add t3, t3, t0
+    call read_sign
+    mv s3, a0
     
-    j input_loop1
-
-end_input1:
-    readch
-    mv t6, a0
-    li a0, '\n'
-    printch
-
-input_loop2:
-    readch
-    beq a0, t5, end_input2
-    mv t0, a0
-    addi t0, t0, -48
-    li t2, 9
-    ble t0, t2, hex_digit2
-    addi t0, t0, -7
-
-hex_digit2:
-    slli t4, t4, 4
-    add t4, t4, t0
+    call read_num
+    mv s2, a0
     
-    j input_loop2
-
-end_input2:
     li t0, '+'
-    beq t6, t0, add_numbers
+    beq s3, t0, add_numbers
     li t0, '-'
-    beq t6, t0, sub_numbers
+    beq s3, t0, sub_numbers
     li t0, '&'
-    beq t6, t0, bit_and
+    beq s3, t0, bit_and
     li t0, '|'
-    beq t6, t0, bit_or
+    beq s3, t0, bit_or
+    
+end_main:
+    # в a0 результат операции
+    call print_result
 
 add_numbers:
-    add t5, t3, t4
-    j print_result
+    add a0, s1, s2
+    j end_main
     
 sub_numbers:
-    sub t5, t3, t4
-    j print_result
+    sub a0, s1, s2
+    j end_main
     
 bit_and:
-    and t5, t3, t4
-    j print_result
+    and a0, s1, s2
+    j end_main
     
 bit_or:
-    or t5, t3, t4
-    j print_result
+    or a0, s1, s2
+    j end_main
+
 
 print_result:
+    mv t5, a0
     li a0, '\n'
     printch
     mv a1, t5
-    jal ra, count_bytes
+    call count_bytes
     mv s5, a0
-    jal ra, print_loop
+    call print_loop
 
 print_loop:
     srl a1, t5, s5
@@ -103,28 +80,55 @@ print_loop:
     addi s5, s5, -4
     j print_loop
 
-end_prog:
-    exit 0
-
-
 count_bytes:
-	li a0, 0
-	beqz a1, quit
+    li a0, 0
+    beqz a1, quit
 count_bytes_loop:
-	srli a1, a1, 4
-	beqz a1, quit
-	addi a0, a0, 4
-	j count_bytes_loop
+    srli a1, a1, 4
+    beqz a1, quit
+    addi a0, a0, 4
+    j count_bytes_loop
 
 num_to_ascii:
-	li t0, 10
-	bge a1, t0, symb_to_ascii
-	addi a0, a1, 48
-	ret
+    li t0, 10
+    bge a1, t0, symb_to_ascii
+    addi a0, a1, 48
+    ret
 symb_to_ascii:
-	addi a0, a1, 55
-	ret
+    addi a0, a1, 55
+    ret
+
+
+read_num:
+    li t5, 10
+    li t1, 0
+input_loop:
+    readch
+    
+    beq a0, t5, end_read
+    addi t0, a0, -48
+    li t2, 9
+    ble t0, t2, hex_digit
+    addi t0, t0, -7
+hex_digit:
+    slli t1, t1, 4
+    add t1, t1, t0
+    
+    j input_loop
+end_read:
+    mv a0, t1
+    ret
+    
+read_sign:
+    readch
+    mv t6, a0
+    li a0, '\n'
+    printch
+    mv a0, t6
+    ret
 
 quit:
     ret
-
+    
+end_prog:
+    exit 0
