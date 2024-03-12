@@ -22,7 +22,7 @@ main:
     li s2, 0  # второе число
     li s3, 0  # знак
     
-    jal ra, read_num
+    call read_num
     mv s1, a0
     
     call read_sign
@@ -38,11 +38,10 @@ main:
     li t0, '&'
     beq s3, t0, bit_and
     li t0, '|'
-    beq s3, t0, bit_or
-    
+    beq s3, t0, bit_or    
 end_main:
-    # в a0 результат операции
     call print_result
+
 
 add_numbers:
     add a0, s1, s2
@@ -65,37 +64,43 @@ print_result:
     mv t5, a0
     li a0, '\n'
     printch
-    mv a1, t5
+    mv t3, t5
     call count_bytes
     mv s5, a0
     call print_loop
 
 print_loop:
-    srl a1, t5, s5
+    srl t3, t5, s5
     call num_to_ascii
     printch
-    sll a1, a1, s5
-    sub t5, t5, a1
+    sll t3, t3, s5
+    sub t5, t5, t3
     beqz s5, end_prog
     addi s5, s5, -4
     j print_loop
 
+
+end_prog:
+    exit 0
+
+
 count_bytes:
     li a0, 0
-    beqz a1, quit
+    beqz t3, quit
 count_bytes_loop:
-    srli a1, a1, 4
-    beqz a1, quit
+    srli t3, t3, 4
+    beqz t3, quit
     addi a0, a0, 4
     j count_bytes_loop
 
+
 num_to_ascii:
     li t0, 10
-    bge a1, t0, symb_to_ascii
-    addi a0, a1, 48
+    bge t3, t0, symb_to_ascii
+    addi a0, t3, 48
     ret
 symb_to_ascii:
-    addi a0, a1, 55
+    addi a0, t3, 55
     ret
 
 
@@ -118,7 +123,8 @@ hex_digit:
 end_read:
     mv a0, t1
     ret
-    
+
+
 read_sign:
     readch
     mv t6, a0
@@ -127,8 +133,6 @@ read_sign:
     mv a0, t6
     ret
 
+
 quit:
     ret
-    
-end_prog:
-    exit 0
