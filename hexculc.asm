@@ -38,26 +38,23 @@ main:
     li t0, '&'
     beq s3, t0, bit_and
     li t0, '|'
-    beq s3, t0, bit_or    
-end_main:
-    call print_result
-
-
+    beq s3, t0, bit_or
+    
 add_numbers:
     add a0, s1, s2
     j end_main
-    
 sub_numbers:
     sub a0, s1, s2
     j end_main
-    
 bit_and:
     and a0, s1, s2
     j end_main
-    
 bit_or:
     or a0, s1, s2
-    j end_main
+
+end_main:
+    call print_result
+    exit 0
 
 
 print_result:
@@ -65,42 +62,31 @@ print_result:
     li a0, '\n'
     printch
     mv t3, t5
-    call count_bytes
-    mv s5, a0
-    call print_loop
-
-print_loop:
-    srl t3, t5, s5
-    call num_to_ascii
-    printch
-    sll t3, t3, s5
-    sub t5, t5, t3
-    beqz s5, end_prog
-    addi s5, s5, -4
-    j print_loop
-
-
-end_prog:
-    exit 0
-
-
-count_bytes:
     li a0, 0
-    beqz t3, quit
-count_bytes_loop:
+    beqz t3, print_after_count
+count_bytes:
     srli t3, t3, 4
-    beqz t3, quit
+    beqz t3, print_after_count
     addi a0, a0, 4
-    j count_bytes_loop
-
-
-num_to_ascii:
+    j count_bytes
+print_after_count:
+    mv t4, a0
+print_loop:
+    srl t3, t5, t4
     li t0, 10
     bge t3, t0, symb_to_ascii
     addi a0, t3, 48
-    ret
+    j print_char
 symb_to_ascii:
     addi a0, t3, 55
+print_char:
+    printch
+    sll t3, t3, t4
+    sub t5, t5, t3
+    beqz t4, end_print
+    addi t4, t4, -4
+    j print_loop
+end_print:
     ret
 
 
@@ -131,8 +117,4 @@ read_sign:
     li a0, '\n'
     printch
     mv a0, t6
-    ret
-
-
-quit:
     ret
