@@ -25,16 +25,12 @@ end_prog:
 multiply_hex:
     li t0, 0  # результат
 
-    mv t1, a0
-    mv t2, a1
+    mv t1, a0  # первое число
+    mv t2, a1  # второе число
 
 multiply_loop:
-    andi t3, t2, 0xF
-    mul t4, t1, t3 
-    slli t0, t0, 4
-    add t0, t0, t4
-
-    srli t2, t2, 4
+    add t0, t0, t1
+    addi t2, t2, -1
 
     bnez t2, multiply_loop
     mv a0, t0
