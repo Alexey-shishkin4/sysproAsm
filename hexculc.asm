@@ -1,8 +1,8 @@
-j main
 .include "macro.asm"
 .include "hex_io.asm"
 
 .text
+.global main
 main:
     li s1, 0  # первое число
     li s2, 0  # второе число
