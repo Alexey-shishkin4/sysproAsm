@@ -21,18 +21,3 @@ main:
     call print_hex
 end_prog:
     exit 0
-
-
-multiply_hex:
-    li t0, 0  # результат
-
-    mv t1, a0  # первое число
-    mv t2, a1  # второе число
-
-multiply_loop:
-    add t0, t0, t1
-    addi t2, t2, -1
-
-    bnez t2, multiply_loop
-    mv a0, t0
-    ret
