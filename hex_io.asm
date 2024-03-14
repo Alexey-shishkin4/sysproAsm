@@ -58,3 +58,31 @@ read_sign:
     printch
     mv a0, t6
     ret
+
+
+multiply_hex:
+    li t0, 0  # результат
+    mv t1, a0  # первое число
+    mv t2, a1  # второе число
+multiply_loop:
+    add t0, t0, t1
+    addi t2, t2, -1
+    bnez t2, multiply_loop
+    mv a0, t0
+    ret
+
+
+division_by_10:
+    li t1, 16
+    li t2, 0  # счетчик
+division_loop:
+    bge a0, t1, divide
+    j end_division
+divide:
+    sub a0, a0, t1
+    addi t2, t2, 1	
+    j division_loop
+end_division:
+    mv a1, a0  # остаток
+    mv a0, t2
+    ret
