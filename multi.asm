@@ -21,20 +21,6 @@ main:
 end_prog:
     exit 0
 
-mul:
-    li t1, 0
-mul_1:
-    andi t2, a0, 1
-    beqz t2, skip_shift
-    sll t3, a1, t0
-    add t1, t1, t3
-skip_shift:
-    addi t0, t0, 1
-    srli a0, a0, 1
-    bnez a0, mul_1
-    mv a0, t1
-    ret
-
 
 multiply_hex:
     li t0, 0  # результат
