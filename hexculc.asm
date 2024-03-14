@@ -1,3 +1,4 @@
+j main
 .include "macro.asm"
 .include "hex_io.asm"
 
