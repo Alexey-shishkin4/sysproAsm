@@ -61,14 +61,26 @@ read_sign:
 
 
 multiply_hex:
-    li t0, 0  # результат
-    mv t1, a0  # первое число
-    mv t2, a1  # второе число
+    li t0, 1  # индекс бита
+    li t1, 0  # результат
+
 multiply_loop:
-    add t0, t0, t1
-    addi t2, t2, -1
-    bnez t2, multiply_loop
-    mv a0, t0
+    beqz a1, end_multiply
+    
+    andi t2, a1, 1
+    beqz t2, next_bit
+    
+    sll t3, a0, t0  # умножаем a на 2^i
+    add t1, t1, t3
+    
+next_bit:
+    srli a1, a1, 1
+    addi t0, t0, 1
+    j multiply_loop
+
+end_multiply:
+    srli t1, t1, 1
+    mv a0, t1
     ret
 
 
