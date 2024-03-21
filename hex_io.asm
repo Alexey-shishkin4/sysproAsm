@@ -84,17 +84,33 @@ end_multiply:
     ret
 
 
-division_by_10:
-    li t1, 16
-    li t2, 0  # счетчик
-division_loop:
-    bge a0, t1, divide
-    j end_division
-divide:
-    sub a0, a0, t1
-    addi t2, t2, 1	
-    j division_loop
-end_division:
-    mv a1, a0  # остаток
-    mv a0, t2
+division_by_10:  # x/10 = x/8 - x/4*1/10
+    li t0, 9
+    ble a0, t0, ret_zero
+    
+    srli t0, a0, 3  # /= 8
+    push2 ra, t0
+    
+    srli a0, a0, 2  # /= 4
+    call division_by_10
+    
+    pop2 ra, t0
+    sub a0, t0, a0  # x/8 - x/4*1/10
+    ret
+
+ret_zero:
+    li a0, 0
+    ret
+
+mod10:  # x - 10*div10(x)
+    push2 ra, t0
+    mv t0, a0
+    call division_by_10
+    # x*2 + x*8 = x*10
+    slli t1, a0, 1
+    slli t2, a0, 3
+    add a0, t1, t2
+    
+    sub a0, t0, a0
+    pop2 ra, t0
     ret

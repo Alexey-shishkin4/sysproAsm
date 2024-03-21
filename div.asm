@@ -14,7 +14,8 @@ main:
     
     call division_by_10
     mv s2, a0
-    mv s3, a1
+    call mod10
+    mv s3, a0
     
     mv a0, s2
     call print_hex
