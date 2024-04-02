@@ -16,7 +16,7 @@ main:
     
     mv a0, s1  # первое число
     mv a1, s2  # второе число
-    call multiply_hex
+    call multiply_32bit
 
     call print_hex
 end_prog:

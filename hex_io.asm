@@ -2,8 +2,15 @@
 read_hex:
     li t5, 10
     li t1, 0
+    li t4, 0  # флаг для отриц числа
+    li t6, 45  # '-'
+check_sign:
+    readch
+    bne a0, t6, continue
+    li t4, 1
 input_loop:
     readch
+continue:
     beq a0, t5, end_read
     addi t0, a0, -48
     li t2, 9
@@ -15,6 +22,9 @@ hex_digit:
     j input_loop
 end_read:
     mv a0, t1
+    beqz t4, to_ret
+    sub a0, zero, a0
+to_ret:
     ret
 
 
@@ -60,12 +70,24 @@ read_sign:
     ret
 
 
-multiply_hex:
+multiply_32bit:
     li t0, 1  # индекс бита
     li t1, 0  # результат
+    li t4, 0xf0000000  # маска для знака
+    
+check_signs:
+    and t5, a0, t4
+    and t6, a1, t4
+    
+    beqz t5, second_sign
+    sub a0, zero, a0
+    
+second_sign:
+    beqz t6, multiply_loop
+    sub a1, zero, a1
 
 multiply_loop:
-    beqz a1, end_multiply
+    beqz a1, add_sign_multiply
     
     andi t2, a1, 1
     beqz t2, next_bit
@@ -78,9 +100,12 @@ next_bit:
     addi t0, t0, 1
     j multiply_loop
 
-end_multiply:
+add_sign_multiply:
     srli t1, t1, 1
     mv a0, t1
+    beq t5, t6, end_multiply
+    sub a0, zero, a0
+end_multiply:
     ret
 
 
