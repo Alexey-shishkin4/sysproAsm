@@ -1,5 +1,6 @@
 .include "macro.asm"
 .include "hex_io.asm"
+.include "operations.asm"
 .text
 
 

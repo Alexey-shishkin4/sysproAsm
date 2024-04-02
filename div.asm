@@ -1,11 +1,12 @@
 .include "macro.asm"
 .include "hex_io.asm"
+.include "operations.asm"
 .text
 
 
 .global main
 main:
-    li s1, 0  # первое число
+    li s1, 0  # число
     li s2, 0  # результат деления на 10
     li s3, 0  # результат остатка на 10
     
@@ -14,6 +15,8 @@ main:
     
     call division_by_10
     mv s2, a0
+    
+    mv a0, s1
     call mod10
     mv s3, a0
     
