@@ -51,3 +51,10 @@
 	lw %r3, 8(sp)
 	addi sp, sp, 12
 .end_macro
+
+
+.macro swap %r1, %r2
+	xor %r1, %r1, %r2
+	xor %r2, %r2, %r1
+	xor %r1, %r1, %r2
+.end_macro
