@@ -16,9 +16,9 @@ main:  # 12, 2 -> 6
     
     mv a0, s0
     mv a1, s1
-    #call udiv
+    call udiv
     
-    #call print_hex
+    call print_hex
     
     mv a0, s0
     mv a1, s1
