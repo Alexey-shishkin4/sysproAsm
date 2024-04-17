@@ -94,12 +94,12 @@ to_ret_sdiv:
 count_bytes_4div:  # t0, a0
 	mv t0 a0
 	li a0 0
-	beq zero t0 _count_bytes_quit
-_count_bytes_loop:
+	beq zero t0 bytes_quit
+bytes_loop:
 	srli t0 t0 1
 	addi a0 a0 1
-	bne zero t0 _count_bytes_loop
-_count_bytes_quit:
+	bne zero t0 bytes_loop
+bytes_quit:
 	ret
 	
 
