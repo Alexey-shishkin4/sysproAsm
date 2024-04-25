@@ -74,3 +74,31 @@
 	xor %r2, %r2, %r1
 	xor %r1, %r1, %r2
 .end_macro
+
+.macro sbrk
+    syscall 9
+.end_macro
+
+.macro printstr
+	syscall 4
+.end_macro
+
+.macro openfile
+	syscall 1024
+.end_macro
+
+.macro closefile
+	syscall 57
+.end_macro
+
+.macro lseek
+	syscall 62
+.end_macro
+
+.macro readfile
+	syscall 63
+.end_macro
+
+.macro writefile
+	syscall 64
+.end_macro
